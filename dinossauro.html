@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segura o Labirintão</title>
+    <link rel="icon" href="lavanda 1.png" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            background: linear-gradient(135deg, #e6e6fa, #d8bfd8);
+        }
+        .maze-container {
+            position: relative;
+            width: 600px; /* Ajustado para refletir o novo tamanho */
+            height: 600px;
+            background-color: #f9f9f9;
+            display: grid;
+            grid-template-columns: repeat(15, 1fr); /* 15x15 para o labirinto maior */
+            grid-template-rows: repeat(15, 1fr);
+            border: 2px solid #9370db;
+        }
+        .cell {
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        .player {
+            background-image: url('Slice 82.png'); /* Substitua pelo caminho da sua imagem */
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+        }
+        .goal {
+            background-image: url('c574b45f5c07f0f45e5eb10e4553e8c1.jpg'); /* Substitua pelo caminho da sua imagem */
+            background-size: cover;
+            background-position: center;
+        }
+        .wall {
+            background-image: url('images.jpg'); /* Substitua pelo caminho da sua imagem */
+            background-size: cover;
+            background-position: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            background-color: #9370db;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="maze-container" id="maze">
+        <!-- Labirinto será gerado dinamicamente -->
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>Boa meu amor! Completou tudinho</h2>
+            <p>Agora já pode ler sua cartinha:</p>
+            <a href="cartinha.html"><button onclick="showGift()">Clique aqui para ver seu presente</button></a>
+        </div>
+    </div>
+
+    <script>
+        const maze = [
+            [' ', ' ', ' ', 'W', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['W', 'W', ' ', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' ', 'W', ' '],
+            [' ', ' ', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', ' '],
+            ['W', 'W', ' ', 'W', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' ', 'W', 'W'],
+            [' ', ' ', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['W', 'W', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['W', 'W', 'W', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' ', 'W', ' '],
+            [' ', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', ' ', 'W', ' '],
+            ['W', ' ', 'W', ' ', 'W', 'W', 'W', 'W', 'W', ' ', ' ', 'W', ' ', 'W', ' '],
+            [' ', ' ', 'W', ' ', 'W', ' ', ' ', ' ', ' ', ' ', 'W', 'W', ' ', ' ', ' '],
+            ['W', 'W', 'W', ' ', 'W', ' ', 'W', 'W', 'W', 'W', 'W', ' ', 'W', 'W', 'W'],
+            [' ', ' ', ' ', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['W', 'W', 'W', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', 'G']
+        ];
+
+        const mazeContainer = document.getElementById('maze');
+        const player = document.createElement('div');
+        player.classList.add('player');
+
+        let playerPosition = { x: 0, y: 0 };
+
+        function renderMaze() {
+            mazeContainer.innerHTML = '';
+            maze.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.classList.add('cell');
+                    if (cell === 'W') {
+                        cellDiv.classList.add('wall');
+                    }
+                    if (rowIndex === playerPosition.y && colIndex === playerPosition.x) {
+                        cellDiv.appendChild(player);
+                    }
+                    if (cell === 'G') {
+                        cellDiv.classList.add('goal');
+                    }
+                    mazeContainer.appendChild(cellDiv);
+                });
+            });
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = playerPosition.x + dx;
+            const newY = playerPosition.y + dy;
+
+            if (
+                newX >= 0 &&
+                newY >= 0 &&
+                newX < maze[0].length &&
+                newY < maze.length &&
+                maze[newY][newX] !== 'W'
+            ) {
+                playerPosition.x = newX;
+                playerPosition.y = newY;
+
+                if (maze[newY][newX] === 'G') {
+                    document.getElementById('modal').style.display = 'flex';
+                }
+            }
+            renderMaze();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    movePlayer(0, -1);
+                    break;
+                case 'ArrowDown':
+                    movePlayer(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    movePlayer(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    movePlayer(1, 0);
+                    break;
+            }
+        });
+
+        function showGift() {
+            alert('Aqui está o seu presente! 🎁');
+        }
+
+        renderMaze();
+    </script>
+</body>
+</html>

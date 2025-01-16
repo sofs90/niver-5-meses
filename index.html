@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizinho</title>
+    <link rel="icon" href="lavanda 1.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: linear-gradient(135deg, #e6e6fa, #d8bfd8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .options button {
+            background: #9370db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .options button:hover {
+            background: #9370db;
+        }
+
+        .result {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #4caf50;
+            display: none;
+        }
+
+        .card {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            color: #333;
+            background: linear-gradient(135deg, #e6e6fa, #d8bfd8);
+            border: 1px dashed #9370db;
+        }
+
+        .extra-message {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .extra-message button {
+            background: #9370db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .extra-message button:hover {
+            background: #9370db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quizinho</h1>
+        <h4>NAO VALE OLHAR NADA NO CELULAR</h4>
+        <div id="quiz">
+            <div id="question-container">
+                <div class="question" id="question">Pergunta será exibida aqui</div>
+                <div class="options" id="options">
+                    <!-- Botões de opções vão aqui -->
+                </div>
+            </div>
+        </div>
+        <div id="result" class="result">Parabéns! Você completou o quiz!</div>
+        <div id="card" class="card">
+            <p>hehehehehe boa meu amor, conseguiu completar o quizinho, mas ainda falta completar mais uma coisinha pra receber o seu presente.</p>
+        </div>
+        <div id="extra-message" class="extra-message">
+            <a href="dinossauro.html"><button id="extra-button" ac>Clique aqui</button></a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+        {
+                question: "Onde foi o nosso primeiro encontro?",
+                options: ["Cinema", "Restaurante", "Parque", "Café"],
+                answer: "Café"
+            },
+            {
+                question: "Qual é a minha cor favorita?",
+                options: ["Azul", "Verde", "Vermelho", "Amarelo"],
+                answer: "Vermelho"
+            },
+            {
+                question: "Qual foi o primeiro filme que assistimos juntas?",
+                options: ["Coraline", "Bela e a Fera", "Mamma Mia", "Divertida Mente"],
+                answer: "Bela e a Fera"
+            },
+            {
+                question: "Se eu pudesse ser um super herói qual eu seria?",
+                options: ["Homem Aranha", "Flash", "Doutor Estranho", "BatWoman"],
+                answer:"Flash"
+            },
+            {
+                question: "Eu tive outros animais alem da frida e da cocota?",
+                options: ["Nao, apenas as nenes lindas perfeitas", "Sim, mais um cachorro, hamsters, passarinho, peixe e calopsitas", "Sim, hamsters, peixe e calopsita", "Sim, hamsters e calopsitas"],
+                answer:"Sim, mais um cachorro, hamsters, passarinho, peixe e calopsitas"
+            },
+            {
+                question: "Quando foi a primeira vez que agnt se beijou?",
+                options: ["1 de junho", "8 de junho", "15 de junho", "22 de junho"],
+                answer:"8 de junho"
+            },
+            {
+                question: "Qual foi o dia que te mandei a primeira mensagem",
+                options: ["11 de maio", "13 de maio", "12 de maio", "14 de maio"],
+                answer:"14 de maio"
+            },
+            {
+                question: "Qual foi a primeira coisa que eu te disse?",
+                options: ["oi. tudo bem? depois vamos ver de marcar de ir la no jazz cafe", "oiii. tudo bem? é a sofia. depois vamos marcar de ir la no jazz cafe", "oiii. tudo bem? é a sofia. depois vamos ver de marcar de ir la no jazz cafe", "oii. tudo bem? é a sofia. depois vamos marcar de ir la no jazz cafe"],
+                answer:"oiii. tudo bem? é a sofia. depois vamos ver de marcar de ir la no jazz cafe"
+            },
+            {
+                question: "Onde foi a primeira foto que temos juntas?",
+                options: ["Na sua casa", "Na unifei", "Piranguçu", "Jazz cafe"],
+                answer:"Piranguçu"
+            },
+            {
+                question: "Qual foi a primeira coisa que eu paguei pra você?",
+                options: ["Trento", "Pão com chocolate", "Salgado no cesar burg", "Onibus Piranguçu"],
+                answer:"Onibus Piranguçu"
+            },
+            {
+                question: "Qual filme  eu escolheria?",
+                options: ["Harry Potter e o Cálice de Fogo", "Narnia", "Toy Story 3", "Jogos Vorazes"],
+                answer:"Harry Potter e o Cálice de Fogo"
+            },
+            {
+                question: "Qual a comida que você me fez que eu mais gostei?",
+                options: ["Macarrão massa fresca", "Bolo de chocolate", "Panquequinha de banana", "Panquequinha de banana com chocolate"],
+                answer:"Panquequinha de banana"
+            },
+            
+        ];
+
+        const questionContainer = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const resultContainer = document.getElementById('result');
+        const cardContainer = document.getElementById('card');
+        const extraMessageContainer = document.getElementById('extra-message');
+        const extraButton = document.getElementById('extra-button');
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionContainer.textContent = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selected === currentQuestion.answer) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    finishQuiz();
+                }
+            } else {
+                alert('Oh man! Damn it! Tenta de novo meu amor.');
+            }
+        }
+
+        function finishQuiz() {
+            questionContainer.style.display = 'none';
+            optionsContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            cardContainer.style.display = 'block';
+            extraMessageContainer.style.display = 'block';
+        }
+
+        extraButton.addEventListener('click', () => {
+            alert('Falta mais uma coisa pra você receber sua carta!');
+            // Adicione qualquer outra ação que você deseja realizar quando o botão for clicado
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
